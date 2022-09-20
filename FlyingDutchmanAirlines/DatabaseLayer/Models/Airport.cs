@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace FlyingDutchmanAirlines
+namespace FlyingDutchmanAirlines.DatabaseLayer.Models
 {
     public partial class Airport
     {

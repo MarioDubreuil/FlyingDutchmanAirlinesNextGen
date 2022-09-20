@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using FlyingDutchmanAirlines.DatabaseLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace FlyingDutchmanAirlines
+namespace FlyingDutchmanAirlines.DatabaseLayer
 {
     public partial class FlyingDutchmanAirlinesContext : DbContext
     {
