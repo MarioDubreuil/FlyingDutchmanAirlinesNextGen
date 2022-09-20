@@ -26,8 +26,8 @@ namespace FlyingDutchmanAirlines.DatabaseLayer
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Server=tcp:codelikeacsharppro.database.windows.net,1433;Initial Catalog=FlyingDutchmanAirlines;Persist Security Info=False;User Id=dev;Password=FlyingDutchmanAirlines1972!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
+                string connectionString = Environment.GetEnvironmentVariable("FlyingDutchmanAirlines_Database_Connection_String") ?? String.Empty;
+                optionsBuilder.UseSqlServer(connectionString);
             }
         }
 
