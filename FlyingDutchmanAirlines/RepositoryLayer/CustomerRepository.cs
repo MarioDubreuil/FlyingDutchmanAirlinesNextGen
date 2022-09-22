@@ -2,8 +2,12 @@
 
 public class CustomerRepository
 {
-    public void CreateCustomer(string name)
+    public bool CreateCustomer(string name)
     {
-
+        if (string.IsNullOrEmpty(name))
+        {
+            return false;
+        }
+        return true;
     }
 }
