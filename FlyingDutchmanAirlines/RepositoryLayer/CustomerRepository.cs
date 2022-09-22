@@ -2,12 +2,18 @@
 
 public class CustomerRepository
 {
-    public bool CreateCustomer(string name)
+    public bool CreateCustomer(string? name)
     {
-        if (string.IsNullOrEmpty(name))
+        if (IsInvalidCustomerName(name))
         {
             return false;
         }
         return true;
+    }
+
+    private bool IsInvalidCustomerName(string? name)
+    {
+        char[] forbiddenCharacters = { '!', '@', '#', '$', '%', '&', '*' };
+        return string.IsNullOrEmpty(name) || name.Any(x => forbiddenCharacters.Contains(x));
     }
 }
