@@ -32,4 +32,20 @@ public class CustomerRepositoryTests
         bool result = repository.CreateCustomer("");
         Assert.IsFalse(result);
     }
+
+    [TestMethod]
+    [DataRow('!')]
+    [DataRow('@')]
+    [DataRow('#')]
+    [DataRow('$')]
+    [DataRow('%')]
+    [DataRow('&')]
+    [DataRow('*')]
+    public void CreateCustomer_Failure_NameContainsInvalidCharacters(char invalidCharacter)
+    {
+        CustomerRepository repository = new();
+        Assert.IsNotNull(repository);
+        bool result = repository.CreateCustomer("Donald Knuth" + invalidCharacter);
+        Assert.IsFalse(result);
+    }
 }
