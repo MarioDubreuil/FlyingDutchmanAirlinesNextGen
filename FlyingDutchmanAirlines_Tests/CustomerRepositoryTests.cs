@@ -1,4 +1,5 @@
 using FlyingDutchmanAirlines.DatabaseLayer;
+using FlyingDutchmanAirlines.DatabaseLayer.Models;
 using FlyingDutchmanAirlines.RepositoryLayer;
 using Microsoft.EntityFrameworkCore;
 
@@ -65,5 +66,12 @@ public class CustomerRepositoryTests
     {
         bool result = await _repository.CreateCustomer("Elvis2" + invalidCharacter);
         Assert.IsFalse(result);
+    }
+
+    [TestMethod]
+    public async Task GetCustomerByName_Success()
+    {
+        Customer customer = await _repository.GetCustomerName("Elvis1");
+        Assert.IsNotNull(customer);
     }
 }

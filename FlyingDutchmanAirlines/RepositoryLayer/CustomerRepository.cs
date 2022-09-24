@@ -34,6 +34,11 @@ public class CustomerRepository
         return true;
     }
 
+    public async Task<Customer> GetCustomerName(string name)
+    {
+        return new Customer(name);
+    }
+
     private bool IsInvalidCustomerName(string? name)
     {
         char[] forbiddenCharacters = { '!', '@', '#', '$', '%', '&', '*' };
