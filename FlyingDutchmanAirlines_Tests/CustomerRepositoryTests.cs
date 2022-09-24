@@ -22,16 +22,25 @@ public class CustomerRepositoryTests
     [TestMethod]
     public async Task CreateCustomer_Success()
     {
-        CustomerRepository repository = new();
+        CustomerRepository repository = new(_context);
         Assert.IsNotNull(repository);
         bool result = await repository.CreateCustomer("Elvis1");
         Assert.IsTrue(result);
     }
 
     [TestMethod]
+    public async Task CreateCustomer_Failure_DatabaseAccessError()
+    {
+        CustomerRepository repository = new(null);
+        Assert.IsNotNull(repository);
+        bool result = await repository.CreateCustomer("Elvis1");
+        Assert.IsFalse(result);
+    }
+
+    [TestMethod]
     public async Task CreateCustomer_Failure_NameIsNull()
     {
-        CustomerRepository repository = new();
+        CustomerRepository repository = new(_context);
         Assert.IsNotNull(repository);
         bool result = await repository.CreateCustomer(null);
         Assert.IsFalse(result);
@@ -40,7 +49,7 @@ public class CustomerRepositoryTests
     [TestMethod]
     public async Task CreateCustomer_Failure_NameIsEmpty()
     {
-        CustomerRepository repository = new();
+        CustomerRepository repository = new(_context);
         Assert.IsNotNull(repository);
         bool result = await repository.CreateCustomer("");
         Assert.IsFalse(result);
@@ -56,7 +65,7 @@ public class CustomerRepositoryTests
     [DataRow('*')]
     public async Task CreateCustomer_Failure_NameContainsInvalidCharacters(char invalidCharacter)
     {
-        CustomerRepository repository = new();
+        CustomerRepository repository = new(_context);
         Assert.IsNotNull(repository);
         bool result = await repository.CreateCustomer("Elvis2" + invalidCharacter);
         Assert.IsFalse(result);
