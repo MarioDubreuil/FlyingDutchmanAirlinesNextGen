@@ -10,11 +10,7 @@ public class CustomerRepository
         {
             return false;
         }
-        Customer newCustomer = new()
-        {
-            Name = name
-        };
-
+        Customer newCustomer = new(name);
         return true;
     }
 
