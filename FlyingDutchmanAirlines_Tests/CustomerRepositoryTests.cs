@@ -6,29 +6,29 @@ namespace FlyingDutchmanAirlines_Tests;
 public class CustomerRepositoryTests
 {
     [TestMethod]
-    public void CreateCustomer_Success()
+    public async Task CreateCustomer_Success()
     {
         CustomerRepository repository = new();
         Assert.IsNotNull(repository);
-        bool result = repository.CreateCustomer("Donald Knuth");
+        bool result = await repository.CreateCustomer("Donald Knuth");
         Assert.IsTrue(result);
     }
 
     [TestMethod]
-    public void CreateCustomer_Failure_NameIsNull()
+    public async Task CreateCustomer_Failure_NameIsNull()
     {
         CustomerRepository repository = new();
         Assert.IsNotNull(repository);
-        bool result = repository.CreateCustomer(null);
+        bool result = await repository.CreateCustomer(null);
         Assert.IsFalse(result);
     }
 
     [TestMethod]
-    public void CreateCustomer_Failure_NameIsEmpty()
+    public async Task CreateCustomer_Failure_NameIsEmpty()
     {
         CustomerRepository repository = new();
         Assert.IsNotNull(repository);
-        bool result = repository.CreateCustomer("");
+        bool result = await repository.CreateCustomer("");
         Assert.IsFalse(result);
     }
 
@@ -40,11 +40,11 @@ public class CustomerRepositoryTests
     [DataRow('%')]
     [DataRow('&')]
     [DataRow('*')]
-    public void CreateCustomer_Failure_NameContainsInvalidCharacters(char invalidCharacter)
+    public async Task CreateCustomer_Failure_NameContainsInvalidCharacters(char invalidCharacter)
     {
         CustomerRepository repository = new();
         Assert.IsNotNull(repository);
-        bool result = repository.CreateCustomer("Donald Knuth" + invalidCharacter);
+        bool result = await repository.CreateCustomer("Donald Knuth" + invalidCharacter);
         Assert.IsFalse(result);
     }
 }
