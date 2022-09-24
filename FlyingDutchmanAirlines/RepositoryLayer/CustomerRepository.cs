@@ -1,4 +1,5 @@
-﻿using FlyingDutchmanAirlines.DatabaseLayer.Models;
+﻿using FlyingDutchmanAirlines.DatabaseLayer;
+using FlyingDutchmanAirlines.DatabaseLayer.Models;
 
 namespace FlyingDutchmanAirlines.RepositoryLayer;
 
@@ -11,6 +12,11 @@ public class CustomerRepository
             return false;
         }
         Customer newCustomer = new(name);
+        using (FlyingDutchmanAirlinesContext context = new())
+        {
+            context.Customers.Add(newCustomer);
+            context.SaveChangesAsync();
+        }
         return true;
     }
 
