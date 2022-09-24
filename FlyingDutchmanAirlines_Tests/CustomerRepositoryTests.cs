@@ -8,6 +8,7 @@ namespace FlyingDutchmanAirlines_Tests;
 public class CustomerRepositoryTests
 {
     private FlyingDutchmanAirlinesContext _context;
+    private CustomerRepository _repository;
 
     [TestInitialize]
     public void TestInitialize()
@@ -17,14 +18,15 @@ public class CustomerRepositoryTests
                 .UseInMemoryDatabase("FlyingDutchman")
                 .Options;
         _context = new FlyingDutchmanAirlinesContext(dbContextOptions);
+
+        _repository = new CustomerRepository(_context);
+        Assert.IsNotNull(_repository);
     }
 
     [TestMethod]
     public async Task CreateCustomer_Success()
     {
-        CustomerRepository repository = new(_context);
-        Assert.IsNotNull(repository);
-        bool result = await repository.CreateCustomer("Elvis1");
+        bool result = await _repository.CreateCustomer("Elvis1");
         Assert.IsTrue(result);
     }
 
@@ -40,18 +42,14 @@ public class CustomerRepositoryTests
     [TestMethod]
     public async Task CreateCustomer_Failure_NameIsNull()
     {
-        CustomerRepository repository = new(_context);
-        Assert.IsNotNull(repository);
-        bool result = await repository.CreateCustomer(null);
+        bool result = await _repository.CreateCustomer(null);
         Assert.IsFalse(result);
     }
 
     [TestMethod]
     public async Task CreateCustomer_Failure_NameIsEmpty()
     {
-        CustomerRepository repository = new(_context);
-        Assert.IsNotNull(repository);
-        bool result = await repository.CreateCustomer("");
+        bool result = await _repository.CreateCustomer("");
         Assert.IsFalse(result);
     }
 
@@ -65,9 +63,7 @@ public class CustomerRepositoryTests
     [DataRow('*')]
     public async Task CreateCustomer_Failure_NameContainsInvalidCharacters(char invalidCharacter)
     {
-        CustomerRepository repository = new(_context);
-        Assert.IsNotNull(repository);
-        bool result = await repository.CreateCustomer("Elvis2" + invalidCharacter);
+        bool result = await _repository.CreateCustomer("Elvis2" + invalidCharacter);
         Assert.IsFalse(result);
     }
 }
