@@ -1,13 +1,20 @@
-﻿namespace FlyingDutchmanAirlines.RepositoryLayer;
+﻿using FlyingDutchmanAirlines.DatabaseLayer.Models;
+
+namespace FlyingDutchmanAirlines.RepositoryLayer;
 
 public class CustomerRepository
 {
-    public bool CreateCustomer(string? name)
+    public bool CreateCustomer(string name)
     {
         if (IsInvalidCustomerName(name))
         {
             return false;
         }
+        Customer newCustomer = new()
+        {
+            Name = name
+        };
+
         return true;
     }
 
