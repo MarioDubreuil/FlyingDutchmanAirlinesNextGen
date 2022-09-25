@@ -1,5 +1,6 @@
 using FlyingDutchmanAirlines.DatabaseLayer;
 using FlyingDutchmanAirlines.DatabaseLayer.Models;
+using FlyingDutchmanAirlines.Exceptions;
 using FlyingDutchmanAirlines.RepositoryLayer;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,13 +13,17 @@ public class CustomerRepositoryTests
     private CustomerRepository _repository;
 
     [TestInitialize]
-    public void TestInitialize()
+    public async Task TestInitialize()
     {
         DbContextOptions<FlyingDutchmanAirlinesContext> dbContextOptions =
             new DbContextOptionsBuilder<FlyingDutchmanAirlinesContext>()
                 .UseInMemoryDatabase("FlyingDutchman")
                 .Options;
         _context = new FlyingDutchmanAirlinesContext(dbContextOptions);
+
+        var testCustomer = new Customer("Linus Torvalds");
+        _context.Customers.Add(testCustomer);
+        await _context.SaveChangesAsync();
 
         _repository = new CustomerRepository(_context);
         Assert.IsNotNull(_repository);
@@ -71,7 +76,38 @@ public class CustomerRepositoryTests
     [TestMethod]
     public async Task GetCustomerByName_Success()
     {
-        Customer customer = await _repository.GetCustomerName("Elvis1");
+        // Si ce test utilise Elvis1 et qu'il roule en meme temps que le test eateCustomer_Success alors un customer est retourne sinon c'est une exception
+        // il y a un probleme, les tests ne sont pas independant
+        Customer customer = await _repository.GetCustomerByName("Linus Torvalds");
         Assert.IsNotNull(customer);
+    }
+
+    [TestMethod]
+    [DataRow("")]
+    [DataRow("!")]
+    [DataRow("@")]
+    [DataRow("#")]
+    [DataRow("$")]
+    [DataRow("%")]
+    [DataRow("&")]
+    [DataRow("*")]
+    [ExpectedException(typeof(CustomerNotFoundException))]
+    public async Task GetCustomerByName_Failure_InvalidName(string name)
+    {
+        await _repository.GetCustomerByName(name);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(CustomerNotFoundException))]
+    public async Task GetCustomerByName_Failure_NullName()
+    {
+        await _repository.GetCustomerByName(null);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(CustomerNotFoundException))]
+    public async Task GetCustomerByName_Failure_NameNotFound()
+    {
+        await _repository.GetCustomerByName("abc");
     }
 }
