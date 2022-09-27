@@ -78,8 +78,10 @@ public class CustomerRepositoryTests
     {
         // Si ce test utilise Elvis1 et qu'il roule en meme temps que le test CeateCustomer_Success alors un customer est retourne sinon c'est une exception
         // il y a un probleme, les tests ne sont pas independant
-        Customer customer = await _repository.GetCustomerByName("Linus Torvalds");
+        const string name = "Linus Torvalds";
+        Customer customer = await _repository.GetCustomerByName(name);
         Assert.IsNotNull(customer);
+        Assert.AreEqual(name, customer.Name);
     }
 
     [TestMethod]
