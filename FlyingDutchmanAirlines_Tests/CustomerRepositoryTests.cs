@@ -2,6 +2,7 @@ using FlyingDutchmanAirlines.DatabaseLayer;
 using FlyingDutchmanAirlines.DatabaseLayer.Models;
 using FlyingDutchmanAirlines.Exceptions;
 using FlyingDutchmanAirlines.RepositoryLayer;
+using FlyingDutchmanAirlines_Tests.Stubs;
 using Microsoft.EntityFrameworkCore;
 
 namespace FlyingDutchmanAirlines_Tests;
@@ -19,7 +20,7 @@ public class CustomerRepositoryTests
             new DbContextOptionsBuilder<FlyingDutchmanAirlinesContext>()
                 .UseInMemoryDatabase("FlyingDutchman")
                 .Options;
-        _context = new FlyingDutchmanAirlinesContext(dbContextOptions);
+        _context = new FlyingDutchmanAirlinesContext_Stub(dbContextOptions);
 
         var testCustomer = new Customer("Linus Torvalds");
         _context.Customers.Add(testCustomer);
@@ -76,8 +77,6 @@ public class CustomerRepositoryTests
     [TestMethod]
     public async Task GetCustomerByName_Success()
     {
-        // Si ce test utilise Elvis1 et qu'il roule en meme temps que le test CeateCustomer_Success alors un customer est retourne sinon c'est une exception
-        // il y a un probleme, les tests ne sont pas independant
         const string name = "Linus Torvalds";
         Customer customer = await _repository.GetCustomerByName(name);
         Assert.IsNotNull(customer);
@@ -107,9 +106,11 @@ public class CustomerRepositoryTests
     }
 
     [TestMethod]
+    [DataRow("abc")]
+    [DataRow("Elvis1")]
     [ExpectedException(typeof(CustomerNotFoundException))]
-    public async Task GetCustomerByName_Failure_NameNotFound()
+    public async Task GetCustomerByName_Failure_NameNotFound(string name)
     {
-        await _repository.GetCustomerByName("abc");
+        await _repository.GetCustomerByName(name);
     }
 }

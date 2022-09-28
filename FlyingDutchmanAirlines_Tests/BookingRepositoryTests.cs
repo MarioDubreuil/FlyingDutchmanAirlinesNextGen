@@ -25,13 +25,16 @@ public class BookingRepositoryTests
     }
 
     [TestMethod]
-    public async Task CreateBooking_Success()
+    [DataRow(1, 0)]
+    [DataRow(1, 1)]
+    [DataRow(1, 2)]
+    public async Task CreateBooking_Success(int customerId, int flightNumber)
     {
-        await _repository.CreateBooking(1, 0);
+        await _repository.CreateBooking(customerId, flightNumber);
         var booking = _context.Bookings.First();
         Assert.IsNotNull(booking);
-        Assert.AreEqual(1, booking.CustomerId);
-        Assert.AreEqual(0, booking.FlightNumber);
+        Assert.AreEqual(customerId, booking.CustomerId);
+        Assert.AreEqual(flightNumber, booking.FlightNumber);
     }
 
     [TestMethod]

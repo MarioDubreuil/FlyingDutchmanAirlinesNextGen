@@ -10,6 +10,7 @@ public class FlyingDutchmanAirlinesContext_Stub : FlyingDutchmanAirlinesContext
 {
     public FlyingDutchmanAirlinesContext_Stub(DbContextOptions<FlyingDutchmanAirlinesContext> options) : base(options)
     {
+        Database.EnsureDeleted();
     }
 
     public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
