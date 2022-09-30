@@ -25,12 +25,12 @@ public class AirportRepositoryTests
         Assert.IsNotNull(_repository);
     }
 
-    [TestMethod]
-    public async Task GetAirportById_Success()
-    {
-        Airport airport = await _repository.GetAirportById(0);
-        Assert.IsNotNull(airport);
-    }
+    //[TestMethod]
+    //public async Task GetAirportById_Success()
+    //{
+    //    Airport airport = await _repository.GetAirportById(0);
+    //    Assert.IsNotNull(airport);
+    //}
 
     [TestMethod]
     [DataRow(-1)]
@@ -38,6 +38,18 @@ public class AirportRepositoryTests
     [ExpectedException(typeof(ArgumentException))]
     public async Task GetAirportById_Failure_InvalidArgument(int airportId)
     {
-        await _repository.GetAirportById(airportId);
+        using (StringWriter outputString = new StringWriter())
+        {
+            Console.SetOut(outputString);
+            try
+            {
+                await _repository.GetAirportById(airportId);
+            }
+            catch (ArgumentException)
+            {
+                Assert.IsTrue(outputString.ToString().Contains($"Argument Exception in GetAirportById! AirportId = {airportId}"));
+                throw;
+            }
+        }
     }
 }
