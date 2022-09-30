@@ -17,7 +17,7 @@ public class FlightRepository
 
 	public async Task<Flight> GetFlightByFlightNumber(int flightNumber, int origin, int destination)
 	{
-        if (flightNumber < 0 || origin < 0 || destination < 0)
+        if (!flightNumber.IsPositive() || !origin.IsPositive() || !destination.IsPositive())
         {
             Console.WriteLine($"Argument Exception in GetFlightByFlightNumber! FlightNumber = {flightNumber}, Origin = {origin}, Destination = {destination}");
             throw new ArgumentException("Invalid arguments provided");
