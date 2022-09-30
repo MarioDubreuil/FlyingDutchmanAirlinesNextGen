@@ -4,7 +4,7 @@ using FlyingDutchmanAirlines.RepositoryLayer;
 using FlyingDutchmanAirlines_Tests.Stubs;
 using Microsoft.EntityFrameworkCore;
 
-namespace FlyingDutchmanAirlines_Tests;
+namespace FlyingDutchmanAirlines_Tests.RepositoryLayer;
 
 [TestClass]
 public class BookingRepositoryTests
