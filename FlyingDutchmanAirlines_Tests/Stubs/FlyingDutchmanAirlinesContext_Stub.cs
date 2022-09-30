@@ -16,11 +16,19 @@ public class FlyingDutchmanAirlinesContext_Stub : FlyingDutchmanAirlinesContext
     public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var pendingChanges = ChangeTracker.Entries().Where(e => e.State == EntityState.Added);
+
         var bookings = pendingChanges.Select(e => e.Entity).OfType<Booking>();
         if (bookings.Any(b => b.CustomerId != 1))
         {
             throw new Exception("Database Error!");
         }
+
+        var airports = pendingChanges.Select(e => e.Entity).OfType<Airport>();
+        if (airports.Any(a => a.AirportId == 10))
+        {
+            throw new Exception("Database Error!");
+        }
+
         await base.SaveChangesAsync(cancellationToken);
         return 1;
     }

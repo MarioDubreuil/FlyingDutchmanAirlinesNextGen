@@ -1,5 +1,6 @@
 ﻿using FlyingDutchmanAirlines.DatabaseLayer;
 using FlyingDutchmanAirlines.DatabaseLayer.Models;
+using FlyingDutchmanAirlines.Exceptions;
 using FlyingDutchmanAirlines.RepositoryLayer;
 using FlyingDutchmanAirlines_Tests.Stubs;
 using Microsoft.EntityFrameworkCore;
@@ -103,5 +104,28 @@ public class AirportRepositoryTests
                 throw;
             }
         }
+    }
+
+    [TestMethod]
+    [DataRow(4)]
+    [DataRow(5)]
+    [ExpectedException(typeof(AirportNotFoundException))]
+    public async Task GetAirportById_Failure_AirportNotFound(int airportId)
+    {
+        await _repository.GetAirportById(airportId);
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(Exception))]
+    public async Task GetAirportById_Failure_DatabaseError()
+    {
+        var airport = new Airport
+        {
+            AirportId = 10,
+            City = "Montreal",
+            Iata = "YUL"
+        };
+        _context.Airports.Add(airport);
+        await _context.SaveChangesAsync();
     }
 }
