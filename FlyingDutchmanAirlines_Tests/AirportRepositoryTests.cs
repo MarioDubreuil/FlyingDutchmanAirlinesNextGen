@@ -69,13 +69,19 @@ public class AirportRepositoryTests
     }
 
     [TestMethod]
-    public async Task GetAirportById_Success()
+    [DataRow(0)]
+    [DataRow(1)]
+    [DataRow(2)]
+    [DataRow(3)]
+    public async Task GetAirportById_Success(int airportId)
     {
-        Airport airport = await _repository.GetAirportById(0);
+        Airport airport = await _repository.GetAirportById(airportId);
         Assert.IsNotNull(airport);
-        Assert.AreEqual(airport.AirportId, 0);
-        Assert.AreEqual(airport.City, "Nuuk");
-        Assert.AreEqual(airport.Iata, "GOH");
+
+        Airport dbAirport = await _context.Airports.FirstAsync(a => a.AirportId == airportId);
+        Assert.AreEqual(dbAirport.AirportId, airport.AirportId);
+        Assert.AreEqual(dbAirport.City, airport.City);
+        Assert.AreEqual(dbAirport.Iata, airport.Iata);
     }
 
     [TestMethod]
