@@ -21,13 +21,47 @@ public class AirportRepositoryTests
                 .Options;
         _context = new FlyingDutchmanAirlinesContext_Stub(dbContextOptions);
 
-        var airport = new Airport
+        var airports = new SortedList<string, Airport>
         {
-            AirportId = 0,
-            City = "Nuuk",
-            Iata = "GOH"
+            {
+                "GOH",
+                new Airport
+                {
+                    AirportId = 0,
+                    City = "Nuuk",
+                    Iata = "GOH"
+                }
+            },
+            {
+                "PHX",
+                new Airport
+                {
+                    AirportId = 1,
+                    City = "Phoenix",
+                    Iata = "PHX"
+                }
+            },
+            {
+                "DDH",
+                new Airport
+                {
+                    AirportId = 2,
+                    City = "Bennington",
+                    Iata = "DDH"
+                }
+            },
+            {
+                "RDU",
+                new Airport
+                {
+                    AirportId = 3,
+                    City = "Raleigh-Durham",
+                    Iata = "RDU"
+                }
+            }
         };
-        _context.Airports.Add(airport);
+
+        _context.Airports.AddRange(airports.Values);
         await _context.SaveChangesAsync();
 
         _repository = new AirportRepository(_context);
