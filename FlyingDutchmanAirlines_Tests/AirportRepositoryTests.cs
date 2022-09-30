@@ -13,7 +13,7 @@ public class AirportRepositoryTests
     private AirportRepository _repository = null!;
 
     [TestInitialize]
-    public void TestInitialize()
+    public async Task TestInitialize()
     {
         DbContextOptions<FlyingDutchmanAirlinesContext> dbContextOptions =
             new DbContextOptionsBuilder<FlyingDutchmanAirlinesContext>()
@@ -21,16 +21,28 @@ public class AirportRepositoryTests
                 .Options;
         _context = new FlyingDutchmanAirlinesContext_Stub(dbContextOptions);
 
+        var airport = new Airport
+        {
+            AirportId = 0,
+            City = "Nuuk",
+            Iata = "GOH"
+        };
+        _context.Airports.Add(airport);
+        await _context.SaveChangesAsync();
+
         _repository = new AirportRepository(_context);
         Assert.IsNotNull(_repository);
     }
 
-    //[TestMethod]
-    //public async Task GetAirportById_Success()
-    //{
-    //    Airport airport = await _repository.GetAirportById(0);
-    //    Assert.IsNotNull(airport);
-    //}
+    [TestMethod]
+    public async Task GetAirportById_Success()
+    {
+        Airport airport = await _repository.GetAirportById(0);
+        Assert.IsNotNull(airport);
+        Assert.AreEqual(airport.AirportId, 0);
+        Assert.AreEqual(airport.City, "Nuuk");
+        Assert.AreEqual(airport.Iata, "GOH");
+    }
 
     [TestMethod]
     [DataRow(-1)]
