@@ -35,4 +35,20 @@ public class BookingServiceTests
         Assert.IsTrue(result);
         Assert.IsNull(exception);
     }
+
+    [TestMethod]
+    [DataRow("", 0)]
+    public async Task CreateBooking_Failure_InvalidArguments(string customerName, int flightNumber)
+    {
+        var mockBookingRepository = new Mock<BookingRepository>();
+        var mockCustomerRepository = new Mock<CustomerRepository>();
+        var mockFlightRepository = new Mock<FlightRepository>();
+
+        var service = new BookingService(mockBookingRepository.Object, mockCustomerRepository.Object, mockFlightRepository.Object);
+
+        (var result, var exception) = await service.CreateBooking(customerName, flightNumber);
+
+        Assert.IsFalse(result);
+        Assert.IsNotNull(exception);
+    }
 }

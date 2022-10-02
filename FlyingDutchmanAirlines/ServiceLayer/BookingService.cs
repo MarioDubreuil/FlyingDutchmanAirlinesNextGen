@@ -17,6 +17,10 @@ public class BookingService
     }
     public async Task<(bool, Exception)> CreateBooking(string customerName, int flightNumber)
     {
+        if (string.IsNullOrEmpty(customerName) || !flightNumber.IsPositive())
+        {
+            return (false, new ArgumentException());
+        }
         try
         {
             Customer customer;
