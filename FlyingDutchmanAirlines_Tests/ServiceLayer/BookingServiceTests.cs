@@ -1,4 +1,5 @@
 ﻿using FlyingDutchmanAirlines.DatabaseLayer.Models;
+using FlyingDutchmanAirlines.Exceptions;
 using FlyingDutchmanAirlines.RepositoryLayer;
 using FlyingDutchmanAirlines.ServiceLayer;
 using Moq;
@@ -52,5 +53,45 @@ public class BookingServiceTests
 
         Assert.IsFalse(result);
         Assert.IsNotNull(exception);
+    }
+
+    [TestMethod]
+    public async Task CreateBooking_Failure_RepositoryException()
+    {
+        var mockBookingRepository = new Mock<BookingRepository>();
+
+        mockBookingRepository
+            .Setup(r => r.CreateBooking(0, 1))
+            .Throws(new ArgumentException());
+
+        mockBookingRepository
+            .Setup(r => r.CreateBooking(1, 2))
+            .Throws(new CouldNotAddBookingToDatabaseException());
+
+        var mockCustomerRepository = new Mock<CustomerRepository>();
+
+        mockCustomerRepository
+            .Setup(r => r.GetCustomerByName("Galileo Galilei"))
+            .Returns(Task.FromResult(new Customer("Galileo Galilei") { CustomerId = 0 }));
+
+        mockCustomerRepository
+            .Setup(r => r.GetCustomerByName("Eise Eisinga"))
+            .Returns(Task.FromResult(new Customer("Eise Eisinga") { CustomerId = 1 }));
+
+        var mockFlightRepository = new Mock<FlightRepository>();
+
+        var service = new BookingService(mockBookingRepository.Object, mockCustomerRepository.Object, mockFlightRepository.Object);
+
+        (var result, var exception) = await service.CreateBooking("Galileo Galilei", 1);
+
+        Assert.IsFalse(result);
+        Assert.IsNotNull(exception);
+        Assert.IsInstanceOfType(exception, typeof(ArgumentException));
+
+        (result, exception) = await service.CreateBooking("Eise Eisinga", 2);
+
+        Assert.IsFalse(result);
+        Assert.IsNotNull(exception);
+        Assert.IsInstanceOfType(exception, typeof(CouldNotAddBookingToDatabaseException));
     }
 }
