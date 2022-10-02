@@ -15,23 +15,23 @@ public class BookingServiceTests
     }
 
     [TestMethod]
-    public async Task CreateBooking_Success()
+    public async Task CreateBooking_Success_OldCustomer()
     {
         var mockBookingRepository = new Mock<BookingRepository>();
         var mockCustomerRepository = new Mock<CustomerRepository>();
         var mockFlightRepository = new Mock<FlightRepository>();
 
-        mockBookingRepository
-            .Setup(r => r.CreateBooking(0, 0))
-            .Returns(Task.CompletedTask);
-
         mockCustomerRepository
             .Setup(r => r.GetCustomerByName("Leo Tolstoy"))
-            .Returns(Task.FromResult(new Customer("Leo Tolstoy")));
+            .ReturnsAsync(new Customer("Leo Tolstoy") { CustomerId = 0 });
 
         mockFlightRepository
             .Setup(r => r.GetFlightByFlightNumber(0))
-            .Returns(Task.FromResult(new Flight { FlightNumber = 0, Origin = 0, Destination = 1}));
+            .ReturnsAsync(new Flight { FlightNumber = 0, Origin = 0, Destination = 1});
+
+        mockBookingRepository
+            .Setup(r => r.CreateBooking(0, 0))
+            .Returns(Task.CompletedTask);
 
         var service = new BookingService(mockBookingRepository.Object, mockCustomerRepository.Object, mockFlightRepository.Object);
 
