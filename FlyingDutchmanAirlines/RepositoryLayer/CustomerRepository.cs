@@ -40,7 +40,7 @@ public class CustomerRepository
         return true;
     }
 
-    public async Task<Customer> GetCustomerByName(string name)
+    public virtual async Task<Customer> GetCustomerByName(string name)
     {
         if (IsInvalidCustomerName(name))
         {
