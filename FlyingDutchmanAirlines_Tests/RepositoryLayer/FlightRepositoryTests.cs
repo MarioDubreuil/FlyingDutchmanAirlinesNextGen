@@ -36,30 +36,27 @@ public class FlightRepositoryTests
     }
 
     [TestMethod]
-    [DataRow(-1, 0, 0)]
-    [DataRow(0, -1, 0)]
-    [DataRow(0, 0, -1)]
-    [DataRow(-1, -1, -1)]
+    [DataRow(-1)]
     [ExpectedException(typeof(ArgumentException))]
-    public async Task GetFlightByflightNumber_Failure_InvalidArguments(int flightNumber, int origin, int destination)
+    public async Task GetFlightByflightNumber_Failure_InvalidArguments(int flightNumber)
     {
-        await _repository.GetFlightByFlightNumber(flightNumber, origin, destination);
+        await _repository.GetFlightByFlightNumber(flightNumber);
     }
 
     [TestMethod]
-    [DataRow(0, 0, 0)]
-    [DataRow(1, 1, 1)]
+    [DataRow(0)]
+    [DataRow(2)]
     [ExpectedException(typeof(FlightNotFoundException))]
-    public async Task GetFlightByflightNumber_Failure_FlightNotFound(int flightNumber, int origin, int destination)
+    public async Task GetFlightByflightNumber_Failure_FlightNotFound(int flightNumber)
     {
-        await _repository.GetFlightByFlightNumber(flightNumber, origin, destination);
+        await _repository.GetFlightByFlightNumber(flightNumber);
     }
 
     [TestMethod]
     [DataRow(1, 1, 2)]
     public async Task GetFlightByflightNumber_Success(int flightNumber, int origin, int destination)
     {
-        var flight = await _repository.GetFlightByFlightNumber(flightNumber, origin, destination);
+        var flight = await _repository.GetFlightByFlightNumber(flightNumber);
         Assert.IsNotNull(flight);
 
         var dbFlight = await _context.Flights.FirstAsync(f => f.FlightNumber == flightNumber);

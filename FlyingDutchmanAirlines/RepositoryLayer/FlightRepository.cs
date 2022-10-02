@@ -18,13 +18,13 @@ public class FlightRepository
 		_context = context;
 	}
 
-	public async Task<Flight> GetFlightByFlightNumber(int flightNumber, int origin, int destination)
+	public async Task<Flight> GetFlightByFlightNumber(int flightNumber)
 	{
-        if (!flightNumber.IsPositive() || !origin.IsPositive() || !destination.IsPositive())
+        if (!flightNumber.IsPositive())
         {
-            Console.WriteLine($"Argument Exception in GetFlightByFlightNumber! FlightNumber = {flightNumber}, Origin = {origin}, Destination = {destination}");
+            Console.WriteLine($"Argument Exception in GetFlightByFlightNumber! FlightNumber = {flightNumber}");
             throw new ArgumentException("Invalid arguments provided");
         }
-        return await _context.Flights.FirstOrDefaultAsync(f => f.FlightNumber == flightNumber && f.Origin == origin && f.Destination == destination) ?? throw new FlightNotFoundException();
+        return await _context.Flights.FirstOrDefaultAsync(f => f.FlightNumber == flightNumber) ?? throw new FlightNotFoundException();
     }
 }
