@@ -1,7 +1,6 @@
 ﻿using FlyingDutchmanAirlines.DatabaseLayer.Models;
 using FlyingDutchmanAirlines.Exceptions;
 using FlyingDutchmanAirlines.RepositoryLayer;
-using System.Runtime.InteropServices;
 
 namespace FlyingDutchmanAirlines.ServiceLayer;
 
@@ -16,6 +15,7 @@ public class BookingService
         _customerRepository = customerRepository;
         _flightRepository = flightRepository;
     }
+
     public async Task<(bool, Exception)> CreateBooking(string customerName, int flightNumber)
     {
         if (string.IsNullOrEmpty(customerName) || !flightNumber.IsPositive())

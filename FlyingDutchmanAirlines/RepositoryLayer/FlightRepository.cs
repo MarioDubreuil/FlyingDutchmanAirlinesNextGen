@@ -27,4 +27,9 @@ public class FlightRepository
         }
         return await _context.Flights.FirstOrDefaultAsync(f => f.FlightNumber == flightNumber) ?? throw new FlightNotFoundException();
     }
+
+    public virtual IEnumerable<Flight> GetFlights()
+    {
+        return _context.Flights;
+    }
 }
