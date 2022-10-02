@@ -7,7 +7,11 @@ namespace FlyingDutchmanAirlines.RepositoryLayer;
 
 public class CustomerRepository
 {
-    private readonly FlyingDutchmanAirlinesContext _context;
+    private readonly FlyingDutchmanAirlinesContext _context = null!;
+
+    public CustomerRepository()
+    {
+    }
 
     public CustomerRepository(FlyingDutchmanAirlinesContext context)
     {
