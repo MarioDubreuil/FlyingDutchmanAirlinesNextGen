@@ -38,6 +38,8 @@ public class BookingServiceTests
 
     [TestMethod]
     [DataRow("", 0)]
+    [DataRow(null, 3)]
+    [DataRow("abc", -1)]
     public async Task CreateBooking_Failure_InvalidArguments(string customerName, int flightNumber)
     {
         var mockBookingRepository = new Mock<BookingRepository>();
