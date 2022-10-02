@@ -18,7 +18,7 @@ public class CustomerRepository
         _context = context;
     }
 
-    public async Task<bool> CreateCustomer(string name)
+    public virtual async Task<bool> CreateCustomer(string name)
     {
         if (IsInvalidCustomerName(name))
         {

@@ -35,11 +35,42 @@ public class BookingServiceTests
 
         var service = new BookingService(mockBookingRepository.Object, mockCustomerRepository.Object, mockFlightRepository.Object);
 
-        (var result, var exception) = await service.CreateBooking("Leo Tolstoy", 0);
+        (var result, var exception) = await service.CreateBooking("Leo Tolstoy", 17);
 
         Assert.IsTrue(result);
         Assert.IsNull(exception);
     }
+
+    //[TestMethod]
+    //public async Task CreateBooking_Success_NewCustomer()
+    //{
+    //    var mockBookingRepository = new Mock<BookingRepository>();
+    //    var mockCustomerRepository = new Mock<CustomerRepository>();
+    //    var mockFlightRepository = new Mock<FlightRepository>();
+
+    //    mockFlightRepository
+    //        .Setup(r => r.GetFlightByFlightNumber(17))
+    //        .ReturnsAsync(new Flight());
+
+    //    mockCustomerRepository
+    //        .Setup(r => r.GetCustomerByName("Leo Tolstoy"))
+    //        .Throws(new CustomerNotFoundException());
+
+    //    mockCustomerRepository
+    //        .Setup(r => r.CreateCustomer("Leo Tolstoy"))
+    //        .ReturnsAsync(true);
+
+    //    mockBookingRepository
+    //        .Setup(r => r.CreateBooking(84, 17))
+    //        .Returns(Task.CompletedTask);
+
+    //    var service = new BookingService(mockBookingRepository.Object, mockCustomerRepository.Object, mockFlightRepository.Object);
+
+    //    (var result, var exception) = await service.CreateBooking("Leo Tolstoy", 17);
+
+    //    Assert.IsTrue(result);
+    //    Assert.IsNull(exception);
+    //}
 
     [TestMethod]
     [DataRow("", 0)]
