@@ -132,11 +132,11 @@ public class BookingServiceTests
 
         mockCustomerRepository
             .Setup(r => r.GetCustomerByName("Maurits Escher"))
-            .Returns(Task.FromResult(new Customer("Maurits Escher") { CustomerId = 0 }));
+            .ReturnsAsync(new Customer("Maurits Escher") { CustomerId = 0 });
 
         mockFlightRepository
             .Setup(r => r.GetFlightByFlightNumber(19))
-            .Returns(Task.FromResult(new Flight() { FlightNumber = 19, Origin = 0, Destination = 1 }));
+            .ReturnsAsync(new Flight() { FlightNumber = 19, Origin = 0, Destination = 1 });
 
         mockBookingRepository
             .Setup(r => r.CreateBooking(0, 19))
