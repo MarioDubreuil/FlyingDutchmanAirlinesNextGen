@@ -21,16 +21,16 @@ public class BookingServiceTests
         var mockCustomerRepository = new Mock<CustomerRepository>();
         var mockFlightRepository = new Mock<FlightRepository>();
 
+        mockFlightRepository
+            .Setup(r => r.GetFlightByFlightNumber(17))
+            .ReturnsAsync(new Flight());
+
         mockCustomerRepository
             .Setup(r => r.GetCustomerByName("Leo Tolstoy"))
-            .ReturnsAsync(new Customer("Leo Tolstoy") { CustomerId = 0 });
-
-        mockFlightRepository
-            .Setup(r => r.GetFlightByFlightNumber(0))
-            .ReturnsAsync(new Flight { FlightNumber = 0, Origin = 0, Destination = 1});
+            .ReturnsAsync(new Customer("Leo Tolstoy") { CustomerId = 84 });
 
         mockBookingRepository
-            .Setup(r => r.CreateBooking(0, 0))
+            .Setup(r => r.CreateBooking(84, 17))
             .Returns(Task.CompletedTask);
 
         var service = new BookingService(mockBookingRepository.Object, mockCustomerRepository.Object, mockFlightRepository.Object);
