@@ -18,7 +18,7 @@ public class FlightRepository
 		_context = context;
 	}
 
-	public async Task<Flight> GetFlightByFlightNumber(int flightNumber)
+	public virtual async Task<Flight> GetFlightByFlightNumber(int flightNumber)
 	{
         if (!flightNumber.IsPositive())
         {

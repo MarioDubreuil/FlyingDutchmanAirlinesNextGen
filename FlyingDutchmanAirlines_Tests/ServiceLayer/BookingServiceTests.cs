@@ -18,16 +18,20 @@ public class BookingServiceTests
     public async Task CreateBooking_Success()
     {
         var mockBookingRepository = new Mock<BookingRepository>();
+        var mockCustomerRepository = new Mock<CustomerRepository>();
+        var mockFlightRepository = new Mock<FlightRepository>();
+
         mockBookingRepository
             .Setup(r => r.CreateBooking(0, 0))
             .Returns(Task.CompletedTask);
 
-        var mockCustomerRepository = new Mock<CustomerRepository>();
         mockCustomerRepository
             .Setup(r => r.GetCustomerByName("Leo Tolstoy"))
             .Returns(Task.FromResult(new Customer("Leo Tolstoy")));
 
-        var mockFlightRepository = new Mock<FlightRepository>();
+        mockFlightRepository
+            .Setup(r => r.GetFlightByFlightNumber(0))
+            .Returns(Task.FromResult(new Flight { FlightNumber = 0, Origin = 0, Destination = 1}));
 
         var service = new BookingService(mockBookingRepository.Object, mockCustomerRepository.Object, mockFlightRepository.Object);
 
@@ -105,6 +109,34 @@ public class BookingServiceTests
         mockCustomerRepository
             .Setup(r => r.GetCustomerByName("Maurits Escher"))
             .Returns(Task.FromResult(new Customer("Maurits Escher") { CustomerId = 0 }));
+
+        mockFlightRepository
+            .Setup(r => r.GetFlightByFlightNumber(19))
+            .Throws(new FlightNotFoundException());
+
+        var service = new BookingService(mockBookingRepository.Object, mockCustomerRepository.Object, mockFlightRepository.Object);
+
+        (var result, var exception) = await service.CreateBooking("Maurits Escher", 19);
+
+        Assert.IsFalse(result);
+        Assert.IsNotNull(exception);
+        Assert.IsInstanceOfType(exception, typeof(FlightNotFoundException));
+    }
+
+    [TestMethod]
+    public async Task CreateBooking_Failure_CouldNotAddBookingToDatabaseException()
+    {
+        var mockBookingRepository = new Mock<BookingRepository>();
+        var mockCustomerRepository = new Mock<CustomerRepository>();
+        var mockFlightRepository = new Mock<FlightRepository>();
+
+        mockCustomerRepository
+            .Setup(r => r.GetCustomerByName("Maurits Escher"))
+            .Returns(Task.FromResult(new Customer("Maurits Escher") { CustomerId = 0 }));
+
+        mockFlightRepository
+            .Setup(r => r.GetFlightByFlightNumber(19))
+            .Returns(Task.FromResult(new Flight() { FlightNumber = 19, Origin = 0, Destination = 1 }));
 
         mockBookingRepository
             .Setup(r => r.CreateBooking(0, 19))

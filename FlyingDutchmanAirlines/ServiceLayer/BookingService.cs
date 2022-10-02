@@ -1,6 +1,7 @@
 ﻿using FlyingDutchmanAirlines.DatabaseLayer.Models;
 using FlyingDutchmanAirlines.Exceptions;
 using FlyingDutchmanAirlines.RepositoryLayer;
+using System.Runtime.InteropServices;
 
 namespace FlyingDutchmanAirlines.ServiceLayer;
 
@@ -23,6 +24,10 @@ public class BookingService
         }
         try
         {
+            if (! await FlightExistsInDatabase(flightNumber))
+            {
+                throw new CouldNotAddBookingToDatabaseException();
+            }
             Customer customer;
             try
             {
@@ -41,5 +46,18 @@ public class BookingService
 
             return (false, exception);
         }
+    }
+
+    private async Task<bool> FlightExistsInDatabase(int flightNumber)
+    {
+        try
+        {
+            _ = await _flightRepository.GetFlightByFlightNumber(flightNumber);
+        }
+        catch (FileNotFoundException)
+        {
+            return false;
+        }
+        return true;
     }
 }
