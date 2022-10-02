@@ -36,15 +36,8 @@ public class FlightRepositoryTests
     }
 
     [TestMethod]
-    [DataRow(-1)]
-    [ExpectedException(typeof(ArgumentException))]
-    public async Task GetFlightByflightNumber_Failure_InvalidArguments(int flightNumber)
-    {
-        await _repository.GetFlightByFlightNumber(flightNumber);
-    }
-
-    [TestMethod]
     [DataRow(0)]
+    [DataRow(-1)]
     [DataRow(2)]
     [ExpectedException(typeof(FlightNotFoundException))]
     public async Task GetFlightByflightNumber_Failure_FlightNotFound(int flightNumber)

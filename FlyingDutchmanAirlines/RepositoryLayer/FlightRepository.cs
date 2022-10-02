@@ -23,7 +23,7 @@ public class FlightRepository
         if (!flightNumber.IsPositive())
         {
             Console.WriteLine($"Argument Exception in GetFlightByFlightNumber! FlightNumber = {flightNumber}");
-            throw new ArgumentException("Invalid arguments provided");
+            throw new FlightNotFoundException();
         }
         return await _context.Flights.FirstOrDefaultAsync(f => f.FlightNumber == flightNumber) ?? throw new FlightNotFoundException();
     }
