@@ -94,4 +94,28 @@ public class BookingServiceTests
         Assert.IsNotNull(exception);
         Assert.IsInstanceOfType(exception, typeof(CouldNotAddBookingToDatabaseException));
     }
+
+    [TestMethod]
+    public async Task CreateBooking_Failure_FlightNotInDatabase()
+    {
+        var mockBookingRepository = new Mock<BookingRepository>();
+        var mockCustomerRepository = new Mock<CustomerRepository>();
+        var mockFlightRepository = new Mock<FlightRepository>();
+
+        mockCustomerRepository
+            .Setup(r => r.GetCustomerByName("Maurits Escher"))
+            .Returns(Task.FromResult(new Customer("Maurits Escher") { CustomerId = 0 }));
+
+        mockBookingRepository
+            .Setup(r => r.CreateBooking(0, 19))
+            .Throws(new CouldNotAddBookingToDatabaseException());
+
+        var service = new BookingService(mockBookingRepository.Object, mockCustomerRepository.Object, mockFlightRepository.Object);
+
+        (var result, var exception) = await service.CreateBooking("Maurits Escher", 19);
+
+        Assert.IsFalse(result);
+        Assert.IsNotNull(exception);
+        Assert.IsInstanceOfType(exception, typeof(CouldNotAddBookingToDatabaseException));
+    }
 }
