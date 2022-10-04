@@ -92,4 +92,37 @@ public class FlightServiceTests
             ;
         }
     }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public async Task GetFlights_Failure_ArgumentException()
+    {
+        var flightInDatabse = new Flight
+        {
+            FlightNumber = 148,
+            Origin = 31,
+            Destination = 92
+        };
+
+        var mockReturn = new Queue<Flight>(1);
+        mockReturn.Enqueue(flightInDatabse);
+
+        var mockFlightRepository = new Mock<FlightRepository>();
+        var mockAirportRepository = new Mock<AirportRepository>();
+
+        mockFlightRepository
+            .Setup(r => r.GetFlights())
+            .Returns(mockReturn);
+
+        mockAirportRepository
+            .Setup(r => r.GetAirportById(31))
+            .ThrowsAsync(new NullReferenceException());
+
+        var service = new FlightService(mockFlightRepository.Object, mockAirportRepository.Object);
+
+        await foreach (var flightView in service.GetFlights())
+        {
+            ;
+        }
+    }
 }
