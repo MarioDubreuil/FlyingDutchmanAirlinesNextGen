@@ -1,4 +1,6 @@
-﻿using FlyingDutchmanAirlines.RepositoryLayer;
+﻿using FlyingDutchmanAirlines.DatabaseLayer.Models;
+using FlyingDutchmanAirlines.Exceptions;
+using FlyingDutchmanAirlines.RepositoryLayer;
 using FlyingDutchmanAirlines.Views;
 
 namespace FlyingDutchmanAirlines.ServiceLayer;
@@ -19,8 +21,21 @@ public class FlightService
 		var flights = _flightRepository.GetFlights();
 		foreach (var flight in flights)
 		{
-            var originAirport = await _airportRepository.GetAirportById(flight.Origin);
-            var destinationAirport = await _airportRepository.GetAirportById(flight.Destination);
+            Airport originAirport;
+            Airport destinationAirport;
+            try
+            {
+                originAirport = await _airportRepository.GetAirportById(flight.Origin);
+                destinationAirport = await _airportRepository.GetAirportById(flight.Destination);
+            }
+            catch (AirportNotFoundException)
+			{
+				throw new AirportNotFoundException();
+			}
+			catch (Exception)
+			{
+				throw new ArgumentException();
+			}
             yield return new FlightView(flight.FlightNumber.ToString(), (originAirport.City, originAirport.Iata), (destinationAirport.City, destinationAirport.Iata));
 		}
 	}
