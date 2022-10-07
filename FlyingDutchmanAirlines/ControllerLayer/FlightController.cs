@@ -1,4 +1,6 @@
-﻿using FlyingDutchmanAirlines.ServiceLayer;
+﻿using FlyingDutchmanAirlines.Exceptions;
+using FlyingDutchmanAirlines.ServiceLayer;
+using FlyingDutchmanAirlines.Views;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
@@ -13,9 +15,25 @@ namespace FlyingDutchmanAirlines.ControllerLayer
             _service = service;
         }
 
-        public IActionResult GetFlights()
+        public async Task<IActionResult> GetFlights()
         {
-            return StatusCode((int)HttpStatusCode.OK, "Hello, World!");
+            var flights = new Queue<FlightView>();
+            try
+            {
+                await foreach (var flight in _service.GetFlights())
+                {
+                    flights.Enqueue(flight);
+                }
+                return StatusCode((int)HttpStatusCode.OK, flights);
+            }
+            catch (FlightNotFoundException)
+            {
+                return StatusCode((int)HttpStatusCode.NotFound, "No flights were found in the database");
+            }
+            catch (Exception)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, "An error occurred");
+            }
         }
     }
 }

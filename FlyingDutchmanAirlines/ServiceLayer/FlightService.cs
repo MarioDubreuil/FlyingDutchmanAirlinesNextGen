@@ -7,8 +7,12 @@ namespace FlyingDutchmanAirlines.ServiceLayer;
 
 public class FlightService
 {
-    private readonly FlightRepository _flightRepository;
-	private readonly AirportRepository _airportRepository;
+    private readonly FlightRepository _flightRepository = null!;
+	private readonly AirportRepository _airportRepository = null!;
+
+    public FlightService()
+    {
+    }
 
 	public FlightService(FlightRepository flightRepository, AirportRepository airportRepository)
 	{
@@ -16,7 +20,7 @@ public class FlightService
 		_airportRepository = airportRepository;
 	}
 
-    public async IAsyncEnumerable<FlightView> GetFlights()
+    public virtual async IAsyncEnumerable<FlightView> GetFlights()
     {
         var flights = _flightRepository.GetFlights();
         foreach (var flight in flights)
