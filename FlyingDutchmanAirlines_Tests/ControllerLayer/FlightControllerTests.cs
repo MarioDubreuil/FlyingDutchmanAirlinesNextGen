@@ -83,6 +83,74 @@ public class FlightControllerTests
         Assert.AreEqual("An error occurred", content);
     }
 
+    [TestMethod]
+    public async Task GetFlightByFlightNumber_Success()
+    {
+        var mockFlightService = new Mock<FlightService>();
+
+        var flight = new FlightView("841", ("New York City", "JFK"), ("London", "LHR"));
+
+        mockFlightService
+            .Setup(r => r.GetFlightByFlightNumber(841))
+            .ReturnsAsync(flight);
+
+        var controller = new FlightController(mockFlightService.Object);
+
+        var response = await controller.GetFlightByFlightNumber(841) as ObjectResult;
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual((int)HttpStatusCode.OK, response.StatusCode);
+
+        var content = response.Value as FlightView;
+
+        Assert.IsNotNull(content);
+        Assert.AreEqual(flight, content);
+    }
+
+    [TestMethod]
+    public async Task GetFlightByFlightNumber_Failure_FlightNotFoundExeption_404()
+    {
+        var mockFlightService = new Mock<FlightService>();
+
+        mockFlightService
+            .Setup(r => r.GetFlightByFlightNumber(841))
+            .Throws(new FlightNotFoundException());
+
+        var controller = new FlightController(mockFlightService.Object);
+
+        var response = await controller.GetFlightByFlightNumber(841) as ObjectResult;
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual((int)HttpStatusCode.NotFound, response.StatusCode);
+
+        var content = response.Value;
+
+        Assert.IsNotNull(content);
+        Assert.AreEqual("Flight was not found in the database", content);
+    }
+
+    [TestMethod]
+    public async Task GetFlightByFlightNumber_Failure_ArgumentExeption_500()
+    {
+        var mockFlightService = new Mock<FlightService>();
+
+        mockFlightService
+            .Setup(r => r.GetFlightByFlightNumber(841))
+            .Throws(new ArgumentException());
+
+        var controller = new FlightController(mockFlightService.Object);
+
+        var response = await controller.GetFlightByFlightNumber(841) as ObjectResult;
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual((int)HttpStatusCode.InternalServerError, response.StatusCode);
+
+        var content = response.Value;
+
+        Assert.IsNotNull(content);
+        Assert.AreEqual("An error occurred", content);
+    }
+
     private async IAsyncEnumerable<FlightView> FlightViewAsyncGenerator(IEnumerable<FlightView> flights)
     {
         foreach (var flight in flights)
