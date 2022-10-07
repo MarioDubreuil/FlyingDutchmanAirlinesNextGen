@@ -6,6 +6,8 @@ using System.Net;
 
 namespace FlyingDutchmanAirlines.ControllerLayer
 {
+    [ApiController]
+    [Route("[controller]")]
     public class FlightController : ControllerBase
     {
         private readonly FlightService _service;
@@ -15,6 +17,7 @@ namespace FlyingDutchmanAirlines.ControllerLayer
             _service = service;
         }
 
+        [HttpGet]
         public async Task<IActionResult> GetFlights()
         {
             var flights = new Queue<FlightView>();
@@ -36,6 +39,7 @@ namespace FlyingDutchmanAirlines.ControllerLayer
             }
         }
 
+        [HttpGet("{flightNumber}")]
         public async Task<IActionResult> GetFlightByFlightNumber(int flightNumber)
         {
             try
