@@ -130,13 +130,35 @@ public class FlightControllerTests
     }
 
     [TestMethod]
+    public async Task GetFlightByFlightNumber_Failure_ArgumentExeption_400()
+    {
+        var mockFlightService = new Mock<FlightService>();
+
+        mockFlightService
+            .Setup(r => r.GetFlightByFlightNumber(-1))
+            .Throws(new ArgumentException());
+
+        var controller = new FlightController(mockFlightService.Object);
+
+        var response = await controller.GetFlightByFlightNumber(-1) as ObjectResult;
+
+        Assert.IsNotNull(response);
+        Assert.AreEqual((int)HttpStatusCode.BadRequest, response.StatusCode);
+
+        var content = response.Value;
+
+        Assert.IsNotNull(content);
+        Assert.AreEqual("Bad request", content);
+    }
+
+    [TestMethod]
     public async Task GetFlightByFlightNumber_Failure_ArgumentExeption_500()
     {
         var mockFlightService = new Mock<FlightService>();
 
         mockFlightService
             .Setup(r => r.GetFlightByFlightNumber(841))
-            .Throws(new ArgumentException());
+            .Throws(new IndexOutOfRangeException());
 
         var controller = new FlightController(mockFlightService.Object);
 

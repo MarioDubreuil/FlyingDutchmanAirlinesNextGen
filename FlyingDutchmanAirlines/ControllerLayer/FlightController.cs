@@ -47,6 +47,10 @@ namespace FlyingDutchmanAirlines.ControllerLayer
             {
                 return StatusCode((int)HttpStatusCode.NotFound, "Flight was not found in the database");
             }
+            catch (ArgumentException)
+            {
+                return StatusCode((int)HttpStatusCode.BadRequest, "Bad request");
+            }
             catch (Exception)
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, "An error occurred");
