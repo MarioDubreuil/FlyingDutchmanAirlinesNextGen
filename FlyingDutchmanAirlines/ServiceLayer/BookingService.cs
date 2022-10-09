@@ -6,9 +6,14 @@ namespace FlyingDutchmanAirlines.ServiceLayer;
 
 public class BookingService
 {
-    private readonly BookingRepository _bookingRepository;
-    private readonly CustomerRepository _customerRepository;
-    private readonly FlightRepository _flightRepository;
+    private readonly BookingRepository _bookingRepository = null!;
+    private readonly CustomerRepository _customerRepository = null!;
+    private readonly FlightRepository _flightRepository = null!;
+
+    public BookingService()
+    {
+    }
+
     public BookingService(BookingRepository bookingRepository, CustomerRepository customerRepository, FlightRepository flightRepository)
     {
         _bookingRepository = bookingRepository;
@@ -16,7 +21,7 @@ public class BookingService
         _flightRepository = flightRepository;
     }
 
-    public async Task<(bool, Exception)> CreateBooking(string customerName, int flightNumber)
+    public virtual async Task<(bool, Exception)> CreateBooking(string customerName, int flightNumber)
     {
         if (string.IsNullOrEmpty(customerName) || !flightNumber.IsPositive())
         {

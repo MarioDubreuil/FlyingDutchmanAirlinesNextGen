@@ -2,6 +2,7 @@
 using FlyingDutchmanAirlines.Exceptions;
 using FlyingDutchmanAirlines.ServiceLayer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System.Net;
 
 namespace FlyingDutchmanAirlines.ControllerLayer;
@@ -20,9 +21,10 @@ public class BookingController : ControllerBase
 	[HttpPost("{flightNumber")]
 	public async Task<IActionResult> CreateBooking([FromBody] BookingData body, int flightNumber)
 	{
-		if (!flightNumber.IsPositive())
-		{
-			return StatusCode((int)HttpStatusCode.BadRequest, "Flight Number query is not a positive integer");
+		if (!flightNumber.IsPositive() || String.IsNullOrEmpty(body.FirstName) || String.IsNullOrEmpty(body.LastName))
+
+        {
+			return StatusCode((int)HttpStatusCode.BadRequest, "Flight Number query is not a positive integer or First or Last Name is null or empty");
 		}
 		if (!ModelState.IsValid)
 		{
@@ -34,9 +36,11 @@ public class BookingController : ControllerBase
 		{
 			return StatusCode((int)HttpStatusCode.Created);
 		}
-		return
-			exception is CouldNotAddBookingToDatabaseException
-			? StatusCode((int)HttpStatusCode.NotFound)
-			: StatusCode((int)HttpStatusCode.InternalServerError);
+		if (exception is CouldNotAddBookingToDatabaseException)
+		{
+			return StatusCode((int)HttpStatusCode.NotFound);
+
+        }
+		return StatusCode((int)HttpStatusCode.InternalServerError);
 	}
 }
