@@ -1,6 +1,8 @@
-﻿namespace FlyingDutchmanAirlines.ControllerLayer.JsonData;
+﻿using System.ComponentModel.DataAnnotations;
 
-public class BookingData
+namespace FlyingDutchmanAirlines.ControllerLayer.JsonData;
+
+public class BookingData : IValidatableObject
 {
     private string _firstName = null!;
     private string _lastName = null!;
@@ -15,6 +17,20 @@ public class BookingData
     {
         get => _lastName;
         set => _lastName = ValidateName(value, nameof(LastName));
+    }
+
+    public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+    {
+        var results = new List<ValidationResult>();
+        if (FirstName == null && LastName == null)
+        {
+            results.Add(new ValidationResult("All given data points are null"));
+        }
+        else if (FirstName == null || LastName == null)
+        {
+            results.Add(new ValidationResult("One of the given data points is null"));
+        }
+        return results;
     }
 
     private string ValidateName(string name, string propertyName) =>

@@ -7,9 +7,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddTransient(typeof(BookingService), typeof(BookingService));
 builder.Services.AddTransient(typeof(FlightService), typeof(FlightService));
-builder.Services.AddTransient(typeof(FlightRepository), typeof(FlightRepository));
 builder.Services.AddTransient(typeof(AirportRepository), typeof(AirportRepository));
+builder.Services.AddTransient(typeof(BookingRepository), typeof(BookingRepository));
+builder.Services.AddTransient(typeof(CustomerRepository), typeof(CustomerRepository));
+builder.Services.AddTransient(typeof(FlightRepository), typeof(FlightRepository));
 builder.Services.AddTransient(typeof(FlyingDutchmanAirlinesContext), typeof(FlyingDutchmanAirlinesContext));
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
